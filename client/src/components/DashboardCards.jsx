@@ -1,5 +1,23 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export const DashboardCards = (props) => {
+    const [isStudent, setIsStudent] = useState([])
+
+    useEffect(() => {
+        getStudentData();
+      }, [])
+      
+    
+    const getStudentData = () => {
+        axios.get
+          (
+            `http://localhost:5000/student/getStudents`
+          ).then((response) => {
+            setIsStudent(response.data.data);
+        });
+    }
+
     return (
         <div>
             <div className={`${props.showMobile ? 'row mx-0 justify-content-center' : 'justify-content-between'} d-flex w-100 align-items-center`}>
@@ -11,7 +29,7 @@ export const DashboardCards = (props) => {
                             </span>
                             <span className="d-flex row">
                                 <span className="card-text">Total Students</span>
-                                <span className="card-number fw-bold">5</span>
+                                <span className="card-number fw-bold">{isStudent.length}</span>
                             </span>
                         </div>
                     </div>

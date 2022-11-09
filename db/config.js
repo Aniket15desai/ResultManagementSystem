@@ -1,12 +1,10 @@
 const mysql = require("mysql");
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
   host: process.env.HOST_NAME,
   user: 'root',
   password: process.env.PASSWORD,
-  database: process.env.DB_NAME
+  database: 'osrs_db',
+  connectionLimit: 10,
 });
 
-connection.connect((error) => {
-  if (error) console.log("error: " + error);
-  else console.log("DB connected");
-});
+module.exports = connection;

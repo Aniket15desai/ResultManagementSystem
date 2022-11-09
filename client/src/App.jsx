@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from "react"
 import { Header } from "./components"
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Dashboard from "./pages/Dashboard";
 import Classes from "./pages/Classes";
 import Subjects from "./pages/Subjects";
@@ -39,6 +39,7 @@ function App() {
         <hr className="border-primary" />
       </div>
       <Routes>
+        <Route exact path="/" element={<Navigate to="/dashboard" replace />} />
         <Route exact path="/dashboard" element={<Dashboard showMobile={showMobile} />} />
         <Route exact path="/classes" element={<Classes />} />
         <Route exact path="/subjects" element={<Subjects />} />

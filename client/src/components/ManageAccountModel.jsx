@@ -1,10 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import bcrypt from 'bcryptjs';
 
 export const ManageAccountModel = (props) => {
+  const [isUser, setIsUser] = useState([]);
 
   const handleClose = () => props.setShow(false);
+
+  useEffect(() => {
+    getStudentData();
+  }, [])
+  
+
+  const getStudentData = () => {
+    axios.get
+      (
+        `http://localhost:5000/user/getUser`
+      ).then((response) => {
+        setIsUser(response.data.data);
+      });
+  }
+
+  const onUpdateClick = () => {
+    var fname = document.getElementById("firstname").value !== "" ? document.getElementById("firstname").value : document.getElementById("firstname").defaultValue;
+    var lname = document.getElementById("lastname").value !== "" ? document.getElementById("lastname").value : document.getElementById("lastname").defaultValue;
+    var uname = document.getElementById("username").value !== "" ? document.getElementById("username").value : document.getElementById("username").defaultValue;
+    var uPassword = document.getElementById("password").value !== "" ? document.getElementById("password").value : document.getElementById("password").defaultValue;
+    
+    // const hashpasswd = bcrypt.hashSync(uPassword, '$2a$10$CwTycUXWue0Thq9StjUM0u');
+
+    const obj = {
+      id: 1,
+      firstname: fname,
+      lastname: lname,
+      username: uname,
+      password: uPassword
+    }
+
+    axios.post(
+      `http://localhost:5000/user/updateUser`, obj
+    )
+      .then((res) => {
+        toast.success('User updated successfully.', {
+          position: toast.POSITION.TOP_CENTER
+        });
+      })
+      .catch((err) => {
+        toast.error('User details not updated.', {
+          position: toast.POSITION.TOP_CENTER
+        })
+    });
+  }
 
   return (
     <>
@@ -13,29 +62,40 @@ export const ManageAccountModel = (props) => {
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <form action="" id="manage-user" className='pe-4'>	
-            <input type="hidden" name="id" />
-            <div class="form-group">
-                <label for="name">First Name</label>
-                <input type="text" name="firstname" id="firstname" class="form-control" autocomplete="off" />
-            </div>
-            <div class="form-group">
-                <label for="name">Last Name</label>
-                <input type="text" name="lastname" id="lastname" class="form-control" required autocomplete="off" />
-            </div>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username" class="form-control" required autocomplete="off" />
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" class="form-control" autocomplete="off" />
-                <small><i>Leave this blank if you dont want to change the password.</i></small>
-            </div>
-        </form>
+          {isUser.map((item) => {
+            var fName = item.firstname;
+            return (
+              <form id="manage-user" className='pe-4'>	
+                <input type="hidden" name="id" />
+                <div class="form-group">
+                    <label for="name">First Name</label>
+                    <input type="text" name="firstname" id="firstname" class="form-control" autocomplete="off" defaultValue={fName} />
+                </div>
+                <div class="form-group">
+                    <label for="name">Last Name</label>
+                    <input type="text" name="lastname" id="lastname" class="form-control" autocomplete="off" defaultValue={item.lastname} />
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" class="form-control" autocomplete="off" defaultValue={item.username} />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" defaultValue={item.password} class="form-control" autocomplete="off" />
+                    <small><i>Leave this blank if you dont want to change the password.</i></small>
+                </div>
+              </form>
+            )
+          })}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary"
+            onClick={(e) => {
+              e.preventDefault();
+              onUpdateClick();
+              handleClose();
+            }}
+          >
             Save
           </Button>
           <Button variant="secondary" onClick={handleClose}>
@@ -43,6 +103,7 @@ export const ManageAccountModel = (props) => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </>
   );
 }
