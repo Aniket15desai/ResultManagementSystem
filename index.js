@@ -4,6 +4,7 @@ const db = require("./db/config.js");
 const cors = require("cors");
 const studentsRouter = require("./routes/studentsRouter");
 const userRouter = require("./routes/userRouter");
+const classRouter = require("./routes/classRouter");
 
 dotenv.config();
 const app = express();
@@ -24,6 +25,7 @@ app.use(
 app.use(express.json());
 app.use("/student", studentsRouter);
 app.use("/user", userRouter);
+app.use("/class", classRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

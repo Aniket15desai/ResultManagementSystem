@@ -6,7 +6,7 @@ export const DashboardCards = (props) => {
 
     useEffect(() => {
         getStudentData();
-      }, [])
+    }, [])
       
     
     const getStudentData = () => {

@@ -11,11 +11,11 @@ export const ManageAccountModel = (props) => {
   const handleClose = () => props.setShow(false);
 
   useEffect(() => {
-    getStudentData();
+      getUserData();
   }, [])
   
 
-  const getStudentData = () => {
+  const getUserData = () => {
     axios.get
       (
         `http://localhost:5000/user/getUser`
@@ -24,7 +24,8 @@ export const ManageAccountModel = (props) => {
       });
   }
 
-  const onUpdateClick = () => {
+  const onUpdateClick = (e) => {
+    e.preventDefault();
     var fname = document.getElementById("firstname").value !== "" ? document.getElementById("firstname").value : document.getElementById("firstname").defaultValue;
     var lname = document.getElementById("lastname").value !== "" ? document.getElementById("lastname").value : document.getElementById("lastname").defaultValue;
     var uname = document.getElementById("username").value !== "" ? document.getElementById("username").value : document.getElementById("username").defaultValue;
@@ -61,47 +62,44 @@ export const ManageAccountModel = (props) => {
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
           {isUser.map((item) => {
             var fName = item.firstname;
             return (
-              <form id="manage-user" className='pe-4'>	
-                <input type="hidden" name="id" />
-                <div class="form-group">
-                    <label for="name">First Name</label>
-                    <input type="text" name="firstname" id="firstname" class="form-control" autocomplete="off" defaultValue={fName} />
-                </div>
-                <div class="form-group">
-                    <label for="name">Last Name</label>
-                    <input type="text" name="lastname" id="lastname" class="form-control" autocomplete="off" defaultValue={item.lastname} />
-                </div>
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" name="username" id="username" class="form-control" autocomplete="off" defaultValue={item.username} />
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" name="password" id="password" defaultValue={item.password} class="form-control" autocomplete="off" />
-                    <small><i>Leave this blank if you dont want to change the password.</i></small>
-                </div>
+              <form id="manage-user" className='pe-4'
+                onSubmit={(e) => {
+                  onUpdateClick(e);
+                  handleClose();
+                }}
+              >	
+                <Modal.Body>
+                  <input type="hidden" name="id" />
+                  <div class="form-group">
+                      <label for="name">First Name</label>
+                      <input type="text" name="firstname" id="firstname" class="form-control" autocomplete="off" defaultValue={fName} />
+                  </div>
+                  <div class="form-group">
+                      <label for="name">Last Name</label>
+                      <input type="text" name="lastname" id="lastname" class="form-control" autocomplete="off" defaultValue={item.lastname} />
+                  </div>
+                  <div class="form-group">
+                      <label for="username">Username</label>
+                      <input type="text" name="username" id="username" class="form-control" autocomplete="off" defaultValue={item.username} />
+                  </div>
+                  <div class="form-group">
+                      <label for="password">Password</label>
+                      <input type="password" name="password" id="password" defaultValue={item.password} class="form-control" autocomplete="off" />
+                      <small><i>Leave this blank if you dont want to change the password.</i></small>
+                  </div>
+                </Modal.Body>
+                <Modal.Footer>
+                  <input type="submit" className="btn btn-primary" value="Save" />
+                  <Button variant="secondary" onClick={handleClose}>
+                    Close
+                  </Button>
+                </Modal.Footer>
               </form>
             )
           })}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary"
-            onClick={(e) => {
-              e.preventDefault();
-              onUpdateClick();
-              handleClose();
-            }}
-          >
-            Save
-          </Button>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
       </Modal>
       <ToastContainer />
     </>
