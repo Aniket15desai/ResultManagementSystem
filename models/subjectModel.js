@@ -3,10 +3,11 @@ const db = require("../db/config");
 module.exports = {
     add: (data, callBack) => {
         db.query(
-            `INSERT INTO classes(year, semester, date_created) values(?, ?, ?);`,
+            `INSERT INTO subjects(subject_code, subject, description, date_created) values(?, ?, ?, ?);`,
             [
-                data.year,
-                data.semester,
+                data.subject_code,
+                data.subject,
+                data.description,
                 data.dateCreated,
             ],
             (error, result) => {
@@ -18,7 +19,7 @@ module.exports = {
         );
     },
     get: (callBack) => {
-        db.query(`SELECT * FROM classes;`, [], (error, result) => {
+        db.query(`SELECT * FROM subjects;`, [], (error, result) => {
             if (error) {
               return callBack(error);
             }
@@ -27,10 +28,11 @@ module.exports = {
     },
     update: (data, callBack) => {
         db.query(
-            `UPDATE classes SET year=?, semester=? WHERE id=?; `,
+            `UPDATE classes SET subject_code=?, subject=?, description=? WHERE id=?; `,
             [
-                data.year,
-                data.semester,
+                data.subject_code,
+                data.subject,
+                data.description,
                 data.id
             ],
             (error, results) => {
@@ -43,7 +45,7 @@ module.exports = {
     },
     deleteById: (data, callBack) => {
         db.query(
-            `DELETE FROM classes WHERE id = ?;`,
+            `DELETE FROM subjects WHERE id = ?;`,
             [
                 data.id,
             ],

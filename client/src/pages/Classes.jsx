@@ -1,52 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import AddClassModel from '../components/addClassModel';
-import ClassTable from '../components/ClassTable';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import AddClassModel from "../components/addClassModel";
+import ClassTable from "../components/ClassTable";
 
-const Classes = () => {
+const Classes = (props) => {
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const [showUpdateId, setShowUpdateId] = useState({});
-  const [showDeleteId, setShowDeleteId] = useState({});
-  const [isClass, setIsClass] = useState([]);
+  const [showUpdateId, setShowUpdateId] = useState({
+    id: "",
+    year: "",
+    semester: "",
+  });
+  const [showDeleteId, setShowDeleteId] = useState(0);
   const handleShowAdd = () => setShowAdd(true);
   const handleShowDelete = () => setShowDelete(true);
 
-  useEffect(() => {
-    getClassDetails();
-  }, [])
-
-  const getClassDetails = () => {
-    axios.get
-    (
-      `http://localhost:5000/class/getClass`
-    ).then((response) => {
-      setIsClass(response.data.data);
-    });
-  }
-  
   const updateClass = (id, year, semester) => {
     handleShowAdd();
-    setShowUpdateId({id: id, year: year, semester: semester});
-  }
+    setShowUpdateId({ id: id, year: year, semester: semester });
+  };
   const deleteClass = (id) => {
     handleShowDelete();
-    setShowDeleteId({id: id});
-  }
+    setShowDeleteId(id);
+  };
 
   // console.log(showId);
-  
+
   return (
     <>
       <ClassTable
-        isClass={isClass}
+        isClass={props.isClass}
         handleShowAdd={handleShowAdd}
         updateClass={updateClass}
         deleteClass={deleteClass}
         handleShowDelete={handleShowDelete}
       />
       <AddClassModel
-        getClassDetails={getClassDetails}
+        getClassDetails={props.getClassDetails}
         showAdd={showAdd}
         setShowUpdateId={setShowUpdateId}
         showUpdateId={showUpdateId}
@@ -57,7 +46,7 @@ const Classes = () => {
         showDelete={showDelete}
       />
     </>
-  )
-}
+  );
+};
 
 export default Classes;

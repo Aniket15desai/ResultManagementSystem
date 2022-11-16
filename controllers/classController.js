@@ -1,4 +1,4 @@
-const { add, get, update, deleted } = require('../models/classModel');
+const { add, get, update, deleteById } = require('../models/classModel');
 
 module.exports = {
   addClass: (req, res) => {
@@ -53,7 +53,7 @@ module.exports = {
     },
     deleteClass: (req, res) => {
         const body = req.body;
-        deleted(body, (err, results) => {
+        deleteById(body, (err, results) => {
           if (err) {
             console.log(err);
             return;
