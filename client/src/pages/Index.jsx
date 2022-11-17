@@ -44,7 +44,7 @@ function Index() {
   };
 
   const getSubjectData = () => {
-    axios.get(`http://localhost:5000/student/getStudents`).then((response) => {
+    axios.get(`http://localhost:5000/subject/getSubject`).then((response) => {
       setIsSubject(response.data.data);
     });
   };
@@ -88,7 +88,13 @@ function Index() {
             <Classes isClass={isClass} getClassDetails={getClassDetails} />
           }
         />
-        <Route exact path="/subjects" element={<Subjects />} />
+        <Route
+          exact
+          path="/subjects"
+          element={
+            <Subjects isSubject={isSubject} getSubjectData={getSubjectData} />
+          }
+        />
         <Route exact path="/dashboard" element={<Dashboard />} />
         <Route exact path="/dashboard" element={<Dashboard />} />
       </Routes>

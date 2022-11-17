@@ -28,7 +28,7 @@ module.exports = {
     },
     update: (data, callBack) => {
         db.query(
-            `UPDATE classes SET subject_code=?, subject=?, description=? WHERE id=?; `,
+            `UPDATE subjects SET subject_code=?, subject=?, description=? WHERE id=?; `,
             [
                 data.subject_code,
                 data.subject,
