@@ -3,8 +3,15 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useState } from "react";
 
 const AddSubjectModal = (props) => {
+  const [addNewSubject, setAddNewSubject] = useState({
+    subject_code: "",
+    subject: "",
+    description: "",
+    dateCreated: new Date(),
+  });
   const handleCloseAdd = () => {
     props.setShowAdd(false);
     props.setUpdateId({ id: "", sbj_code: "", sbj: "", desc: "" });
@@ -13,34 +20,52 @@ const AddSubjectModal = (props) => {
     props.setShowDelete(false);
   };
 
+  const sbj_code = (e) => {
+    setAddNewSubject({
+      ...addNewSubject,
+      subject_code: e.target.value,
+    });
+  };
+
+  const sbj = (e) => {
+    setAddNewSubject({
+      ...addNewSubject,
+      subject: e.target.value,
+    });
+  };
+
+  const sbj_desc = (e) => {
+    setAddNewSubject({
+      ...addNewSubject,
+      description: e.target.value,
+    });
+  };
+
   // ADD Operation
   const addSubject = () => {
-    var sbj_code = document.getElementById("subject_code").value;
-    var sbj = document.getElementById("subject").value;
-    var desc = document.getElementById("description").value;
-
-    if (sbj_code !== "" && sbj !== "") {
-      const obj = {
-        subject_code: sbj_code,
-        subject: sbj,
-        description: desc,
-        dateCreated: new Date(),
-      };
+    if (addNewSubject.subject_code !== "" && addNewSubject.subject !== "") {
+      const custToast = toast.loading("Adding New Subject...");
 
       axios
-        .post(`http://localhost:5000/subject/addSubject`, obj)
+        .post(`http://localhost:5000/subject/addSubject`, addNewSubject)
         .then((res) => {
           handleCloseAdd();
           setTimeout(() => {
-            toast.success("Subject added successfully.", {
-              position: toast.POSITION.TOP_CENTER,
+            toast.update(custToast, {
+              render: "Subject added successfully.",
+              type: "success",
+              isLoading: false,
+              autoClose: 3000,
             });
             props.getSubjectData();
-          }, 5000);
+          }, 3000);
         })
         .catch((err) => {
-          toast.error("Something went wrong.", {
-            position: toast.POSITION.TOP_CENTER,
+          toast.update(custToast, {
+            render: "Something went wrong.",
+            type: "error",
+            isLoading: false,
+            autoClose: 3000,
           });
         });
     }
@@ -53,20 +78,28 @@ const AddSubjectModal = (props) => {
         id: props.deleteId,
       };
 
+      const custToast = toast.loading("Deleting Subject...");
+
       axios
         .post(`http://localhost:5000/subject/deleteSubject`, obj)
         .then((res) => {
           handleCloseDelete();
           setTimeout(() => {
-            toast.success("Subject deleted successfully.", {
-              position: toast.POSITION.TOP_CENTER,
+            toast.update(custToast, {
+              render: "Subject deleted successfully.",
+              type: "success",
+              isLoading: false,
+              autoClose: 3000,
             });
             props.getSubjectData();
-          }, 5000);
+          }, 3000);
         })
         .catch((err) => {
-          toast.error("Something went wrong.", {
-            position: toast.POSITION.TOP_CENTER,
+          toast.update(custToast, {
+            render: "Something went wrong.",
+            type: "error",
+            isLoading: false,
+            autoClose: 3000,
           });
         });
     }
@@ -94,19 +127,30 @@ const AddSubjectModal = (props) => {
         description: desc,
         id: props.updateId.id,
       };
+
+      const custToast = toast.loading("Updating Subject", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+
       axios
         .post(`http://localhost:5000/subject/updateSubject`, obj)
         .then((res) => {
           setTimeout(() => {
-            toast.success("Subject Update successfully.", {
-              position: toast.POSITION.TOP_CENTER,
+            toast.update(custToast, {
+              render: "Subject Updated Successfully",
+              type: "success",
+              isLoading: false,
+              autoClose: 3000,
             });
             props.getSubjectData();
-          }, 5000);
+          }, 3000);
         })
         .catch((err) => {
-          toast.error("Something went wrong.", {
-            position: toast.POSITION.TOP_CENTER,
+          toast.update(custToast, {
+            render: "Something went wrong.",
+            type: "error",
+            isLoading: false,
+            autoClose: 3000,
           });
         });
     }
@@ -126,36 +170,39 @@ const AddSubjectModal = (props) => {
           <form id="manage-subject" className="pe-4">
             <Modal.Body>
               <input type="hidden" name="id" />
-              <div class="form-group">
+              <div className="form-group">
                 <label for="subject_code">Subject Code</label>
                 <input
                   type="text"
                   name="subject_code"
                   id="subject_code"
-                  class="form-control"
-                  autocomplete="off"
+                  className="form-control"
+                  autoComplete="off"
+                  onChange={sbj_code}
                   defaultValue={props.updateId.sbj_code}
                 />
               </div>
-              <div class="form-group">
+              <div className="form-group">
                 <label for="subject">Subject</label>
                 <input
                   type="text"
                   name="subject"
                   id="subject"
-                  class="form-control"
-                  autocomplete="off"
+                  className="form-control"
+                  autoComplete="off"
+                  onChange={sbj}
                   defaultValue={props.updateId.sbj}
                 />
               </div>
-              <div class="form-group">
+              <div className="form-group">
                 <label for="description">Description</label>
                 <textarea
                   type="text"
                   name="description"
                   id="description"
-                  class="form-control"
-                  autocomplete="off"
+                  className="form-control"
+                  autoComplete="off"
+                  onChange={sbj_desc}
                   defaultValue={props.updateId.desc}
                 />
               </div>
@@ -204,7 +251,7 @@ const AddSubjectModal = (props) => {
               <input
                 type="submit"
                 className="btn btn-primary"
-                value="Continue"
+                value="Delete"
                 onClick={(e) => {
                   e.preventDefault();
                   deleteSubject();

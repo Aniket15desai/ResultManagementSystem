@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
 import bcrypt from "bcryptjs";
 
 const ManageAccountModel = (props) => {
@@ -142,7 +141,6 @@ const ManageAccountModel = (props) => {
           );
         })}
       </Modal>
-      <ToastContainer />
     </>
   );
 };

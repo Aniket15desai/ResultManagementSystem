@@ -3,7 +3,7 @@ import LOGO from "../assets/images/logo.png";
 
 const Header = (props) => {
   return (
-    <nav className="navbar position-relative navbar-dark bg-primary fixed-top">
+    <nav className="navbar position-fixed navbar-dark bg-primary fixed-top">
       <div
         className={`${
           props.showMobile
@@ -104,7 +104,7 @@ const Header = (props) => {
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="/list">
+                    <a className="dropdown-item" href="/studentList">
                       List
                     </a>
                   </li>

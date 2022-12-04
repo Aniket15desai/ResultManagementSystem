@@ -3,7 +3,7 @@ import React from "react";
 const ClassTable = (props) => {
   let i = 0;
   return (
-    <div className="col-lg-12 px-4">
+    <div className="col-lg-12 px-4 mb-4">
       <div class="card card-outline card-primary">
         <div class="card-header">
           <div class="card-tools">
