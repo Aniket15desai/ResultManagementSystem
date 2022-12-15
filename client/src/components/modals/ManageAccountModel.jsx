@@ -66,7 +66,7 @@ const ManageAccountModel = (props) => {
     <>
       <Modal show={props.show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Manage Account</Modal.Title>
         </Modal.Header>
         {isUser.map((item) => {
           var fName = item.firstname;

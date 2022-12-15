@@ -4,20 +4,28 @@ import Dashboard from "./Dashboard";
 import Header from "../components/Header";
 import Classes from "./Classes";
 import Subjects from "./Subjects";
-import ManageAccountModel from "../components/ManageAccountModel";
+import ManageAccountModel from "../components/modals/ManageAccountModel";
 import axios from "axios";
 import StudentList from "./StudentList";
 import AddStudent from "./AddStudent";
 import { ToastContainer } from "react-toastify";
+import Results from "./Results";
+import AddResult from "./AddResult";
 
 function Index() {
   const [show, setShow] = useState(false);
   const [showMobile, setShowMobile] = useState(false);
-  const [showList, setShowList] = useState(false);
   const [isClass, setIsClass] = useState([]);
   const [isStudent, setIsStudent] = useState([]);
+  const [allStudentResult, setAllStudentResult] = useState([]);
   const [isSubject, setIsSubject] = useState([]);
+  const [isResult, setIsResult] = useState([]);
   const handleShow = () => setShow(true);
+
+  const [showList, setShowList] = useState({});
+  const [resultList, setResultList] = useState({});
+
+  console.log(resultList);
 
   const [updateStudentId, setUpdateStudentId] = useState({
     id: "",
@@ -69,6 +77,8 @@ function Index() {
     getClassDetails();
     getStudentData();
     getSubjectData();
+    getResultData();
+    getAllStudentResultList();
   }, []);
 
   const getClassDetails = () => {
@@ -89,6 +99,20 @@ function Index() {
     });
   };
 
+  const getResultData = () => {
+    axios.get(`http://localhost:5000/result/getAllResults`).then((response) => {
+      setIsResult(response.data.data);
+    });
+  };
+
+  const getAllStudentResultList = () => {
+    axios
+      .get(`http://localhost:5000/result/getAllStudentList`)
+      .then((response) => {
+        setAllStudentResult(response.data.data);
+      });
+  };
+
   return (
     <div>
       <Header handleShow={handleShow} showMobile={showMobile} />
@@ -103,6 +127,7 @@ function Index() {
                 <Route exact path="/studentList" element={"Student List"} />
                 <Route exact path="/add_new" element={"New Student"} />
                 <Route exact path="/results" element={"Results"} />
+                <Route exact path="/new_result" element={"New Result"} />
               </Routes>
             </h1>
           </div>
@@ -160,7 +185,31 @@ function Index() {
             />
           }
         />
-        <Route exact path="/result" element={<Dashboard />} />
+        <Route
+          exact
+          path="/results"
+          element={
+            <Results
+              isResult={isResult}
+              setShowList={setShowList}
+              setResultList={setResultList}
+            />
+          }
+        />
+
+        <Route
+          exact
+          path="/new_result"
+          element={
+            <AddResult
+              showList={showList}
+              isSubject={isSubject}
+              getAllStudentResultList={getAllStudentResultList}
+              allStudentResult={allStudentResult}
+              resultList={resultList}
+            />
+          }
+        />
       </Routes>
       <ManageAccountModel show={show} setShow={setShow} />
       <ToastContainer autoClose={4000} position="top-center" theme="colored" />

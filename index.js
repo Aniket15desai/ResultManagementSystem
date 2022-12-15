@@ -6,6 +6,7 @@ const studentsRouter = require("./routes/studentsRouter");
 const userRouter = require("./routes/userRouter");
 const classRouter = require("./routes/classRouter");
 const subjectRouter = require("./routes/subjectRouter");
+const resultRouter = require("./routes/resultRouter");
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ app.use("/student", studentsRouter);
 app.use("/user", userRouter);
 app.use("/class", classRouter);
 app.use("/subject", subjectRouter);
+app.use("/result", resultRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

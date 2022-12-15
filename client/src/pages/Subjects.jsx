@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AddSubjectModal from "../components/AddSubjectModal";
+import AddSubjectModal from "../components/modals/AddSubjectModal";
 import SubjectTable from "../components/SubjectTable";
 
 const Subjects = (props) => {

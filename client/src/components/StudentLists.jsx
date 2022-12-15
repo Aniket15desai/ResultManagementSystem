@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DeleteStudentModal from "./DeleteStudentModal";
+import DeleteStudentModal from "./modals/DeleteStudentModal";
 
 const StudentLists = (props) => {
   const [showDelete, setShowDelete] = useState(false);

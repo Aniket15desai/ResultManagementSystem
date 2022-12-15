@@ -1,7 +1,9 @@
 import "../styles/Header.css";
 import LOGO from "../assets/images/logo.png";
+import { useState } from "react";
 
 const Header = (props) => {
+  const [isActive, setIsActive] = useState("");
   return (
     <nav className="navbar position-fixed navbar-dark bg-primary fixed-top">
       <div

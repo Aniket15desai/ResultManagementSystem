@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AddClassModel from "../components/addClassModel";
+import AddClassModel from "../components/modals/AddClassModel";
 import ClassTable from "../components/ClassTable";
 
 const Classes = (props) => {

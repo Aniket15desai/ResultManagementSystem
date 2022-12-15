@@ -1,12 +1,8 @@
-import React from "react"
-import Index from "./pages/Index"
-
+import React from "react";
+import Index from "./pages/Index";
 
 function App() {
-  
-  return (
-    <Index />
-  )
+  return <Index />;
 }
 
-export default App
+export default App;
