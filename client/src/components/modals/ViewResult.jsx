@@ -12,10 +12,10 @@ const ViewResult = (props) => {
   return (
     <div>
       <Modal show={props.show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Result</Modal.Title>
+        </Modal.Header>
         <div class="container-fluid" id="printable">
-          <Modal.Header closeButton>
-            <Modal.Title>Result</Modal.Title>
-          </Modal.Header>
           <Modal.Body>
             <table width="100%">
               <tr>

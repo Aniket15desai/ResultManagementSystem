@@ -53,6 +53,24 @@ const AddNewResult = (props) => {
     ]);
   };
 
+  useEffect(() => {
+    if (props.resultList !== "") {
+      props.resultList &&
+        props.resultList.map((item) => {
+          setNewSubject((newSubject) => [
+            ...newSubject.filter((x) => x.subjectCode !== item.subject_code),
+            {
+              subjectCode: item.subject_code,
+              subjectId: item.subject_id,
+              sbj: item.subject,
+              mark: item.mark,
+              dateCreated: new Date(),
+            },
+          ]);
+        });
+    }
+  }, []);
+
   const removeSubject = (value) => {
     setNewSubject((newSubject) =>
       newSubject.filter((item) => item.subjectId !== value)
@@ -94,7 +112,7 @@ const AddNewResult = (props) => {
           newResultId,
         })
         .then((res) => {
-          props.getAllStudentResultList();
+          props.getResultData();
           setTimeout(() => {
             toast.update(custToast, {
               render: "Result added successfully.",
@@ -143,8 +161,13 @@ const AddNewResult = (props) => {
                             data-class_id={item.class_id}
                             data-class={item.class}
                             selected={
-                              document.getElementById("student_id").value ===
-                              item.id
+                              props.showList.id !== ""
+                                ? props.showList.student_id === item.id
+                                  ? true
+                                  : false
+                                : document
+                                    .getElementById("student_id")
+                                    .value.slice(0, 2) === item.id
                                 ? true
                                 : false
                             }
@@ -154,7 +177,12 @@ const AddNewResult = (props) => {
                         );
                       })}
                   </select>
-                  <small id="class">Current class: {classes.slice(6)}</small>
+                  <small id="class">
+                    Current class:{" "}
+                    {props.showList.class !== ""
+                      ? props.showList.class
+                      : classes.slice(6)}
+                  </small>
                   <input type="hidden" name="class_id" value="" />
                 </div>
               </div>
@@ -275,16 +303,25 @@ const AddNewResult = (props) => {
         </div>
         <div className="card-footer border-top border-info">
           <div className="d-flex w-100 justify-content-center align-items-center">
-            <button
-              className="btn btn-primary btn-flat bg-gradient-primary mx-2"
-              form="manage-result"
-              onClick={(e) => {
-                e.preventDefault();
-                onSaveResult();
-              }}
-            >
-              Save
-            </button>
+            {props.resultList === "" ? (
+              <button
+                className="btn btn-primary btn-flat bg-gradient-primary mx-2"
+                form="manage-result"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onSaveResult();
+                }}
+              >
+                Save
+              </button>
+            ) : (
+              <button
+                className="btn btn-primary btn-flat bg-gradient-primary mx-2"
+                form="manage-result"
+              >
+                Update
+              </button>
+            )}
             <button
               className="btn btn-flat btn-secondary mx-2"
               onClick={() => {

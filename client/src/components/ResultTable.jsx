@@ -13,22 +13,6 @@ const ResultTable = (props) => {
   const [getViewResult, setGetViewResult] = useState([]);
   const [getViewStudentResult, setGetViewStudendResult] = useState([]);
 
-  const getResultItem = (resultID) => {
-    try {
-      axios
-        .get(`http://localhost:5000/result/getResultItemsById?id=${resultID}`)
-        .then((res) => {
-          props.setShowList(res.data.data[0]);
-          navigate("/new_result");
-        });
-      axios
-        .get(`http://localhost:5000/result/getResultItems?id=${resultID}`)
-        .then((res) => {
-          console.log(res.data.data);
-          props.setResultList(res.data.data);
-        });
-    } catch (err) {}
-  };
   const viewResults = (resultID) => {
     try {
       axios
@@ -105,7 +89,7 @@ const ResultTable = (props) => {
                             class="btn btn-primary btn-flat"
                             onClick={(e) => {
                               e.preventDefault();
-                              getResultItem(item.id);
+                              props.getResultItem(item.id);
                             }}
                           >
                             <i class="fas fa-edit"></i>

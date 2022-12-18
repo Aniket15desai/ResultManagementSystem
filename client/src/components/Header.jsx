@@ -3,15 +3,24 @@ import LOGO from "../assets/images/logo.png";
 import { useState } from "react";
 
 const Header = (props) => {
-  const [isActive, setIsActive] = useState("");
+  const [isActive, setIsActive] = useState(false);
+
+  if (isActive) {
+    document.documentElement.requestFullscreen();
+  }
+
+  if (!isActive) {
+    document.exitFullscreen();
+  }
+
   return (
-    <nav className="navbar position-fixed navbar-dark bg-primary fixed-top">
+    <nav className="navbar position-fixed d-flex navbar-dark bg-primary fixed-top">
       <div
         className={`${
           props.showMobile
             ? "d-flex justify-content-start align-items-center"
-            : "container-fluid"
-        }`}
+            : "d-flex container-fluid justify-content-between"
+        } w-100`}
       >
         <div
           className="navbar-toggler"
@@ -21,9 +30,39 @@ const Header = (props) => {
         >
           <span className="navbar-toggler-icon"></span>
         </div>
-        <a className="navbar-brand mx-5" href="/dashboard">
-          <img src={LOGO} width="180" alt="LOGO" srcset="" />
-        </a>
+        <div className="d-flex justify-content-between align-items-center">
+          <div>
+            {isActive ? (
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  setIsActive(false);
+                }}
+              >
+                <i
+                  className="fa-solid fa-minimize"
+                  style={{ color: "white" }}
+                ></i>
+              </div>
+            ) : (
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  setIsActive(true);
+                }}
+              >
+                <i
+                  className="fa-solid fa-maximize"
+                  style={{ color: "white" }}
+                ></i>
+              </div>
+            )}
+          </div>
+
+          <a className="navbar-brand mx-5" href="/dashboard">
+            <img src={LOGO} width="180" alt="LOGO" srcset="" />
+          </a>
+        </div>
         <div
           className="offcanvas offcanvas-start text-bg-dark"
           tabindex="-1"

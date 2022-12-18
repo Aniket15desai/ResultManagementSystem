@@ -6,7 +6,7 @@ const AddResult = (props) => {
     <AddNewResult
       isSubject={props.isSubject}
       showList={props.showList}
-      getAllStudentResultList={props.getAllStudentResultList}
+      getResultData={props.getResultData}
       allStudentResult={props.allStudentResult}
       resultList={props.resultList}
     />

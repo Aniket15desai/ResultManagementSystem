@@ -7,6 +7,7 @@ const Results = (props) => {
       isResult={props.isResult}
       setShowList={props.setShowList}
       setResultList={props.setResultList}
+      getResultItem={props.getResultItem}
     />
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Header from "../components/Header";
 import Classes from "./Classes";
@@ -11,6 +11,7 @@ import AddStudent from "./AddStudent";
 import { ToastContainer } from "react-toastify";
 import Results from "./Results";
 import AddResult from "./AddResult";
+import Login from "./Login";
 
 function Index() {
   const [show, setShow] = useState(false);
@@ -23,9 +24,12 @@ function Index() {
   const handleShow = () => setShow(true);
 
   const [showList, setShowList] = useState({});
-  const [resultList, setResultList] = useState({});
+  const [resultList, setResultList] = useState("");
 
-  console.log(resultList);
+  const param = new URLSearchParams(window.location.search);
+  const active = param.get("loginId");
+
+  const navigate = useNavigate();
 
   const [updateStudentId, setUpdateStudentId] = useState({
     id: "",
@@ -64,22 +68,19 @@ function Index() {
   };
 
   useEffect(() => {
+    getClassDetails();
+    getStudentData();
+    getSubjectData();
+    getResultData();
+    getAllStudentResultList();
     if (window) {
-      if (window.matchMedia("(max-width: 991px)").matches) {
+      if (window.matchMedia("(max-width: 768px)").matches) {
         setShowMobile(true);
       } else {
         setShowMobile(false);
       }
     }
   }, [window]);
-
-  useEffect(() => {
-    getClassDetails();
-    getStudentData();
-    getSubjectData();
-    getResultData();
-    getAllStudentResultList();
-  }, []);
 
   const getClassDetails = () => {
     axios.get(`http://localhost:5000/class/getClass`).then((response) => {
@@ -113,106 +114,143 @@ function Index() {
       });
   };
 
+  const getResultItem = (resultID) => {
+    try {
+      axios
+        .get(`http://localhost:5000/result/getResultItemsById?id=${resultID}`)
+        .then((res) => {
+          setShowList(res.data.data[0]);
+          navigate("/new_result");
+        });
+      axios
+        .get(`http://localhost:5000/result/getResultItems?id=${resultID}`)
+        .then((res) => {
+          console.log(res.data.data);
+          setResultList(res.data.data);
+        });
+    } catch (err) {}
+  };
+
   return (
     <div>
-      <Header handleShow={handleShow} showMobile={showMobile} />
-      <div className="container-fluid" style={{ marginTop: "100px" }}>
-        <div className="row mb-2">
-          <div className="col-sm-6">
-            <h1 className="m-0">
-              <Routes>
-                <Route exact path="/dashboard" element={"Home"} />
-                <Route exact path="/classes" element={"Classes"} />
-                <Route exact path="/subjects" element={"Subjects"} />
-                <Route exact path="/studentList" element={"Student List"} />
-                <Route exact path="/add_new" element={"New Student"} />
-                <Route exact path="/results" element={"Results"} />
-                <Route exact path="/new_result" element={"New Result"} />
-              </Routes>
-            </h1>
+      {active === "active" ? (
+        <Routes>
+          <Route exact path="/login" element={<Login />} />
+        </Routes>
+      ) : (
+        <div>
+          <Header handleShow={handleShow} showMobile={showMobile} />
+          <div className="container-fluid" style={{ marginTop: "100px" }}>
+            <div className="row mb-2">
+              <div className="col-sm-6">
+                <h1 className="m-0">
+                  <Routes>
+                    <Route exact path="/dashboard" element={"Home"} />
+                    <Route exact path="/classes" element={"Classes"} />
+                    <Route exact path="/subjects" element={"Subjects"} />
+                    <Route exact path="/studentList" element={"Student List"} />
+                    <Route exact path="/add_new" element={"New Student"} />
+                    <Route exact path="/results" element={"Results"} />
+                    <Route exact path="/new_result" element={"New Result"} />
+                  </Routes>
+                </h1>
+              </div>
+            </div>
+            <hr className="border-primary" />
           </div>
-        </div>
-        <hr className="border-primary" />
-      </div>
-      <Routes>
-        <Route exact path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route
-          exact
-          path="/dashboard"
-          element={
-            <Dashboard
-              isStudent={isStudent}
-              isClass={isClass}
-              isSubject={isSubject}
-              showMobile={showMobile}
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={<Navigate to="/login?loginId=active" replace />}
             />
-          }
-        />
-        <Route
-          exact
-          path="/classes"
-          element={
-            <Classes isClass={isClass} getClassDetails={getClassDetails} />
-          }
-        />
-        <Route
-          exact
-          path="/subjects"
-          element={
-            <Subjects isSubject={isSubject} getSubjectData={getSubjectData} />
-          }
-        />
-        <Route
-          exact
-          path="/studentList"
-          element={
-            <StudentList
-              isStudent={isStudent}
-              isClass={isClass}
-              handleUpdateStudent={handleUpdateStudent}
-              getStudentData={getStudentData}
+            <Route
+              exact
+              path="/dashboard"
+              element={
+                <Dashboard
+                  isStudent={isStudent}
+                  isClass={isClass}
+                  isSubject={isSubject}
+                  showMobile={showMobile}
+                />
+              }
             />
-          }
-        />
-        <Route
-          exact
-          path="/add_new"
-          element={
-            <AddStudent
-              isClass={isClass}
-              getStudentData={getStudentData}
-              updateStudentId={updateStudentId}
+            <Route
+              exact
+              path="/classes"
+              element={
+                <Classes isClass={isClass} getClassDetails={getClassDetails} />
+              }
             />
-          }
-        />
-        <Route
-          exact
-          path="/results"
-          element={
-            <Results
-              isResult={isResult}
-              setShowList={setShowList}
-              setResultList={setResultList}
+            <Route
+              exact
+              path="/subjects"
+              element={
+                <Subjects
+                  isSubject={isSubject}
+                  getSubjectData={getSubjectData}
+                />
+              }
             />
-          }
-        />
+            <Route
+              exact
+              path="/studentList"
+              element={
+                <StudentList
+                  isStudent={isStudent}
+                  isClass={isClass}
+                  handleUpdateStudent={handleUpdateStudent}
+                  getStudentData={getStudentData}
+                />
+              }
+            />
+            <Route
+              exact
+              path="/add_new"
+              element={
+                <AddStudent
+                  isClass={isClass}
+                  getStudentData={getStudentData}
+                  updateStudentId={updateStudentId}
+                />
+              }
+            />
+            <Route
+              exact
+              path="/results"
+              element={
+                <Results
+                  isResult={isResult}
+                  setShowList={setShowList}
+                  setResultList={setResultList}
+                  getResultItem={getResultItem}
+                />
+              }
+            />
 
-        <Route
-          exact
-          path="/new_result"
-          element={
-            <AddResult
-              showList={showList}
-              isSubject={isSubject}
-              getAllStudentResultList={getAllStudentResultList}
-              allStudentResult={allStudentResult}
-              resultList={resultList}
+            <Route
+              exact
+              path="/new_result"
+              element={
+                <AddResult
+                  showList={showList}
+                  isSubject={isSubject}
+                  getResultData={getResultData}
+                  allStudentResult={allStudentResult}
+                  resultList={resultList}
+                />
+              }
             />
-          }
-        />
-      </Routes>
-      <ManageAccountModel show={show} setShow={setShow} />
-      <ToastContainer autoClose={4000} position="top-center" theme="colored" />
+          </Routes>
+          <ManageAccountModel show={show} setShow={setShow} />
+          <ToastContainer
+            autoClose={4000}
+            position="top-center"
+            theme="colored"
+          />
+        </div>
+      )}
     </div>
   );
 }
